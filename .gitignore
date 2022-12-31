@@ -305,3 +305,6 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+**/migrations
+beat_join_app/beat_join_frontend/static/js/main.js.LICENSE.txt
