@@ -307,4 +307,4 @@ GitHub.sublime-settings
 .history
 
 **/migrations
-beat_join_app/beat_join_frontend/static/js/*
+**/beat_join_app/beat_join_frontend/static/js/main.js
