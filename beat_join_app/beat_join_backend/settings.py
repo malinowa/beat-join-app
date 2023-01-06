@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-8(ke=4dx6ib#15489)guzieu8h6$9)p^#w!hao(2)w!sr3=fm(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.220', '127.0.0.1', 'localhost']
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'api.middleware.OneSessionPerUserMiddleware',
 ]
 
 ROOT_URLCONF = 'beat_join_backend.urls'
@@ -114,6 +116,11 @@ USE_I18N = True
 
 USE_TZ = True
 
+SESSION_SAVE_EVERY_REQUEST = True
+
+SESSION_COOKIE_AGE = 5*60*60
+
+#SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/

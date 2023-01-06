@@ -7,9 +7,12 @@ export const Room = (props) => {
     votesToSkip: 2,
     guestCanPause: false,
     isHost: false,
+    currentUsers: []
   };
 
   const [roomData, setRoomData] = React.useState(initializeRoomObj);
+  const [songData, setSongData] = React.useState(null);
+
   const { roomCode } = useParams();
   const navigate = useNavigate();
 
@@ -26,20 +29,29 @@ export const Room = (props) => {
           votesToSkip: data.votes_to_skip,
           guestCanPause: data.guest_can_pause,
           isHost: data.is_host,
+          currentUsers: data.current_users
         });
       });
   };
 
+  const getCurrentSong = () => {
+    
+  }
+
   const leaveRoomPressed = () => {
     const requestOptions = {
         method: 'POST',
-        headers: {"Content-Type": "appliaction/json"}
+        headers: {"Content-Type": "application/json"}
     }
 
     fetch("/api/leave-room", requestOptions)
     .then((response) => response.json())
     .then((data) => {
-        navigate("/");
+        if (data?.room_not_found) {
+          alert("Host had left the room. Please reload page.")
+        } else {
+          navigate("/");
+        }
     });
   }
 
@@ -50,18 +62,13 @@ export const Room = (props) => {
   return (
     <Grid container spacing={1}>
       <Grid item xs={12} align="center">
+        <Typography><b>Current users:</b></Typography>
+        <ul>
+        {roomData.currentUsers.map((item, id) => <li key={id}>{item.username}</li>)}
+        </ul>
+      </Grid>
+      <Grid item xs={12} align="center">
         <Typography><b>Code:</b> {roomCode}</Typography>
-      </Grid>
-      <Grid item xs={12} align="center">
-        <Typography><b>Votes:</b> {roomData.votesToSkip}</Typography>
-      </Grid>
-      <Grid item xs={12} align="center">
-        <Typography>
-        <b>Guest can pause:</b> {roomData.guestCanPause.toString()}
-        </Typography>
-      </Grid>
-      <Grid item xs={12} align="center">
-        <Typography><b>Is host:</b> {roomData.isHost.toString()}</Typography>
       </Grid>
       <Grid item xs={12} align="center">
         <Button variant="contained" color="secondary" onClick={leaveRoomPressed}>Leave Room</Button>

@@ -1,6 +1,8 @@
 import React from "react";
 import { Grid, Button, ButtonGroup, Typography } from "@mui/material";
 import { Link, Navigate, Outlet } from "react-router-dom";
+import { HomePageButton } from "./customComponents/HomePageButton";
+import { MainText } from "./customComponents/MainText";
 
 export const HomePage = (props) => {
   const [roomCode, setRoomCode] = React.useState("");
@@ -22,15 +24,18 @@ export const HomePage = (props) => {
     return <Navigate to={`/room/${roomCode}`}/>
   }
 
-  return (<Grid container spacing={3}>
+  return (<Grid container spacing={4}>
             <Grid item xs={12} align="center">
-              <Typography variant="h4">Welcome to BeatJoin!</Typography>
+              <MainText>Welcome to BeatJoin!</MainText>
             </Grid>
             <Grid item xs={12} align="center">
-              <ButtonGroup variant="contained">
-                <Button variant="contained" color="primary" to="/join" LinkComponent={Link}>Join Room</Button>
-                <Button variant="contained" color="secondary" to="/create" LinkComponent={Link}>Create Room</Button>
-              </ButtonGroup>
+              <Typography color="white" fontSize={18} fontWeight={500} fontStyle="italic">Choose your action:</Typography>
+            </Grid>
+            <Grid item xs={12} align="center">
+              <HomePageButton variant="contained" color="secondary" to="/create" LinkComponent={Link}>Create New Room</HomePageButton>
+            </Grid>
+            <Grid item xs={12} align="center">
+              <HomePageButton variant="contained" color="primary" to="/join" LinkComponent={Link}>Join Room With Code</HomePageButton>
             </Grid>
           </Grid>);
 };
