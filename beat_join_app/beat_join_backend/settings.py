@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'rest_framework',
-    'beat_join_frontend.apps.BeatJoinFrontendConfig'
+    'beat_join_frontend.apps.BeatJoinFrontendConfig',
+    'spotify.apps.SpotifyConfig'
 ]
 
 MIDDLEWARE = [

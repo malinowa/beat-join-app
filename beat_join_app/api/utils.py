@@ -18,8 +18,6 @@ def upadate_session_profile(session_key, room, username):
 def check_is_active_room(room: Room):
     host_session = Session.objects.get(session_key=room.host)
 
-    print(host_session.expire_date)
-    print("NOW: ", timezone.now())
     if host_session.expire_date < timezone.now():
         sessionProfile = SessionProfile.objects.filter(session_key=host_session.session_key)
         
@@ -28,8 +26,6 @@ def check_is_active_room(room: Room):
         
         room.delete()
         return False
-
-    print("CHECK_IS_ACTIVE:  ", host_session)
 
     return True
 
@@ -49,3 +45,16 @@ def check_if_user_in_room(room, session_key):
             return True
     
     return False
+
+def get_room_by_session(session_key):
+    sessionProfile = SessionProfile.objects.filter(session_key=session_key)
+
+    if sessionProfile.count() > 0:
+        profile = sessionProfile[0]
+
+        room = profile.room 
+
+        if room:
+            return room
+    
+    return None

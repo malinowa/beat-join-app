@@ -13,7 +13,7 @@ import {
 } from "react-router-dom";
 
 export default function App (props) {
-    return <div className="center"><Outlet/></div>;
+    return <Outlet/>;
 }
 
 const router = createBrowserRouter(

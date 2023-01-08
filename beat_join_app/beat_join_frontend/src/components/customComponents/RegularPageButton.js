@@ -2,11 +2,10 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
 export const RegularPageButton = styled(Button)({
-    fontSize: 15,
+    fontSize: 24,
     fontWeight: 500,
     color: "#263238",
-    width: "50%",
-    heigh: "100%",
+    width: "70%",
     textTransform: "none",
     backgroundColor: '#FFFFFF',
     borderColor: '#FFFFFF',

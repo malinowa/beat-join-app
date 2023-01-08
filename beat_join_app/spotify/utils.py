@@ -61,7 +61,6 @@ def refresh_spotify_token(session_id):
 
     access_token = response.get('access_token')
     token_type = response.get('token_type')
-    #refresh_token = response.get('refresh_token')
     expires_in = response.get('expires_in')
 
     update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
@@ -91,3 +90,6 @@ def pause_song(session_id):
 
 def skip_song(session_id):
     return execute_spotify_api_request(session_id, '/player/next', post_=True)
+
+def rewind_song(session_id):
+    return execute_spotify_api_request(session_id, '/player/previous', post_=True)

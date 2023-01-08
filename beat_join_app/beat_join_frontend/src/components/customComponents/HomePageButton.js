@@ -6,7 +6,7 @@ export const HomePageButton = styled(Button)({
     fontWeight: 500,
     color: "#263238",
     width: "70%",
-    heigh: "100%",
+    height: "100%",
     textTransform: "none",
     backgroundColor: '#FFFFFF',
     borderColor: '#FFFFFF',

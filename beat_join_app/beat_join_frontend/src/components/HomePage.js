@@ -24,18 +24,20 @@ export const HomePage = (props) => {
     return <Navigate to={`/room/${roomCode}`}/>
   }
 
-  return (<Grid container spacing={4}>
-            <Grid item xs={12} align="center">
-              <MainText>Welcome to BeatJoin!</MainText>
-            </Grid>
-            <Grid item xs={12} align="center">
-              <Typography color="white" fontSize={18} fontWeight={500} fontStyle="italic">Choose your action:</Typography>
-            </Grid>
-            <Grid item xs={12} align="center">
-              <HomePageButton variant="contained" color="secondary" to="/create" LinkComponent={Link}>Create New Room</HomePageButton>
-            </Grid>
-            <Grid item xs={12} align="center">
-              <HomePageButton variant="contained" color="primary" to="/join" LinkComponent={Link}>Join Room With Code</HomePageButton>
-            </Grid>
-          </Grid>);
+  return (<div className="homePage">
+            <Grid container spacing={4}>
+                    <Grid item xs={12} align="center">
+                      <MainText>Welcome to BeatJoin!</MainText>
+                    </Grid>
+                    <Grid item xs={12} align="center">
+                      <Typography color="white" fontSize={18} fontWeight={500} fontStyle="italic">Choose your action:</Typography>
+                    </Grid>
+                    <Grid item xs={12} align="center">
+                      <HomePageButton variant="contained" color="secondary" to="/create" LinkComponent={Link}>Create New Room</HomePageButton>
+                    </Grid>
+                    <Grid item xs={12} align="center">
+                      <HomePageButton variant="contained" color="primary" to="/join" LinkComponent={Link}>Join Room With Code</HomePageButton>
+                    </Grid>
+                  </Grid>
+          </div>);
 };

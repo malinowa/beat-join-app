@@ -6,13 +6,19 @@ import { HelperText } from "./customComponents/HelperText";
 import { CustomTextField } from "./customComponents/CustomTextField";
 import { RegularPageButton } from "./customComponents/RegularPageButton";
 
+import { useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+
 export const JoinRoomPage = (props) => {
 
   const [roomCode, setRoomCode] = React.useState(""); 
   const [errorCode, setErrorCode] = React.useState(""); 
   const [errorUsername, setErrorUsername] = React.useState(""); 
-  const [username, setUsername] = React.useState(""); 
+  const [username, setUsername] = React.useState("");
+
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleRoomCodeChange = (e) => {
     setRoomCode(e.target.value);
@@ -51,19 +57,21 @@ export const JoinRoomPage = (props) => {
     })
   }
 
-  return <Grid container rowSpacing={3} columnSpacing={1}>
+  return <div className="joinPage">
+    <Grid container rowSpacing={3} columnSpacing={1}>
           <Grid item xs={12} align="center">
             <MainText>Join Room With Code</MainText>
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Grid height="100%" container direction="row" justifyContent="center" alignItems="center">
+         <Grid item container xs={12} align="center" rowSpacing={3} columnSpacing={5}>
+         <Grid item container xs={12} md={6}>
+            <Grid height="100%" container direction="row" justifyContent={isSmallScreen ? "center" : "flex-end"} alignItems="center">
               <HelperText>Room Code:</HelperText>
             </Grid>
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Grid height="100%" container direction="row" justifyContent="center" alignItems="center">
+          <Grid item container xs={12} md={6}>
+            <Grid height="100%" container direction="row" justifyContent={isSmallScreen ? "center" : "flex-start"} alignItems="center">
               <CustomTextField
                   value={roomCode}
                   error={errorCode === "" ? false : true}
@@ -78,14 +86,14 @@ export const JoinRoomPage = (props) => {
             </Grid>
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Grid height="100%" container direction="row" justifyContent="center" alignItems="center">
+          <Grid item container xs={12} md={6}>
+            <Grid height="100%" container direction="row" justifyContent={isSmallScreen ? "center" : "flex-end"} alignItems="center">
               <HelperText>Username:</HelperText>
             </Grid>
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Grid height="100%" container direction="row" justifyContent="center" alignItems="center">
+          <Grid item container xs={12} md={6}>
+            <Grid height="100%" container direction="row" justifyContent={isSmallScreen ? "center" : "flex-start"} alignItems="center">
               <CustomTextField
                   value={username}
                   error={errorUsername === "" ? false : true}
@@ -99,6 +107,7 @@ export const JoinRoomPage = (props) => {
                 />
             </Grid>
           </Grid>
+         </Grid>
 
           <Grid item xs={12} align="center">
             <RegularPageButton variant="contained" color="primary" onClick={joinRoom}>Join Room</RegularPageButton>
@@ -106,5 +115,6 @@ export const JoinRoomPage = (props) => {
           <Grid item xs={12} align="center">
             <RegularPageButton variant="contained" color="secondary" to="/" component={Link}>Back</RegularPageButton>
           </Grid>
-        </Grid>;
+        </Grid>
+  </div>;
 };

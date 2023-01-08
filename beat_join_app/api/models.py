@@ -24,6 +24,7 @@ class Room(models.Model):
     votes_to_skip = models.IntegerField(null=False, default=1)
     votes_to_rewind = models.IntegerField(null=False, default=1)
     created = models.DateTimeField(auto_now_add=True)
+    current_song = models.CharField(max_length=300, null=True)
 
     def __str__(self):
         return f"Room code {self.code}"

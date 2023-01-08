@@ -12,6 +12,7 @@ class RoomSerializer(serializers.ModelSerializer):
         serializer = SessionProfileSerializer(sessionProfiles, many=True)
         return serializer.data
 
+
 class CreateRoomSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=12)
     class Meta:
@@ -25,5 +26,8 @@ class SessionProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-
+class UpdateRoomSerializer(serializers.ModelSerializer):
+    code = serializers.CharField(max_length=6)
+    class Meta:
+        model = Room
+        fields = ['guest_can_pause', 'votes_to_skip', 'votes_to_rewind', 'code']

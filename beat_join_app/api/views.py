@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from django.contrib.sessions.models import Session
 
 from .models import Room, SessionProfile
-from .serializers import RoomSerializer, CreateRoomSerializer
+from .serializers import RoomSerializer, CreateRoomSerializer, UpdateRoomSerializer
 from .utils import *
 
 class RoomView(generics.ListAPIView):
@@ -131,7 +131,7 @@ class CreateRoomView(APIView):
         if serializer.is_valid():
             guest_can_pause = serializer.data.get('guest_can_pause')
             votes_to_skip = serializer.data.get('votes_to_skip')
-            votes_to_skip = serializer.data.get('votes_to_rewind')
+            votes_to_rewind = serializer.data.get('votes_to_rewind')
             username = serializer.data.get('username')
 
             session_key = self.request.session.session_key
@@ -142,8 +142,9 @@ class CreateRoomView(APIView):
                 room = query_set[0]
                 room.guest_can_pause = guest_can_pause
                 room.votes_to_skip = votes_to_skip
+                room.votes_to_rewind = votes_to_rewind
             else:
-                room = Room(host=session_key, guest_can_pause=guest_can_pause, votes_to_skip=votes_to_skip)
+                room = Room(host=session_key, guest_can_pause=guest_can_pause, votes_to_skip=votes_to_skip, votes_to_rewind=votes_to_rewind)
             
             room.save()
 
@@ -152,5 +153,41 @@ class CreateRoomView(APIView):
             return Response(data=RoomSerializer(room, many=False).data, status=status.HTTP_201_CREATED)
         
         return Response({"Bad Request": "Request data is not correct"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateRoomView(APIView):
+    serializer_class = UpdateRoomSerializer
+
+    def patch(self, request, format=None):
+            create_session_if_not_exists(self.request)
+
+            serializer = self.serializer_class(data=request.data)
+
+            if serializer.is_valid():
+                guest_can_pause = serializer.data.get('guest_can_pause')
+                votes_to_skip = serializer.data.get('votes_to_skip')
+                votes_to_rewind = serializer.data.get('votes_to_rewind')
+                code = serializer.data.get('code')
+
+                query_set = Room.objects.filter(code=code)
+
+                if query_set.count() <= 0:
+                    return Response({"msg": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
+                
+                room = query_set[0]
+                
+                user_id = self.request.session.session_key
+
+                if room.host != user_id:
+                    return Response({"msg": "You are not the host of this room."}, status=status.HTTP_403_FORBIDDEN)
+
+                room.guest_can_pause = guest_can_pause
+                room.votes_to_skip = votes_to_skip
+                room.votes_to_rewind = votes_to_rewind
+                room.save(update_fields=['guest_can_pause', 'votes_to_skip', 'votes_to_rewind'])
+
+                return Response(RoomSerializer(room, many=False).data, status=status.HTTP_200_OK)
+            
+            return Response({"Bad Request": "Request data is not correct"}, status=status.HTTP_400_BAD_REQUEST)
 
 
