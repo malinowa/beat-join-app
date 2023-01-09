@@ -11,6 +11,6 @@ urlpatterns = [
     path('leave-room', LeaveRoom.as_view(), name='leave-room'),
     path('update-room', UpdateRoomView.as_view(), name='update-room'),
     path('current-room', CurrentRoomView.as_view(), name='current-room'),
-    path('delete-from-users-list', DeleteFromUsersList.as_view(), name='delete-from-user-list'),
+    # path('delete-from-users-list', DeleteFromUsersList.as_view(), name='delete-from-user-list'),
 ]
 

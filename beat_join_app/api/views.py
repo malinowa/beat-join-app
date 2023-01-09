@@ -10,21 +10,21 @@ from .serializers import RoomSerializer, CreateRoomSerializer, UpdateRoomSeriali
 from .utils import *
 
 
-class DeleteFromUsersList(APIView):
-    def post(self, request):
-        sessionProfile = SessionProfile.objects.filter(session_key=self.request.session.session_key)
+# class DeleteFromUsersList(APIView):
+#     def post(self, request):
+#         sessionProfile = SessionProfile.objects.filter(session_key=self.request.session.session_key)
 
-        if sessionProfile.count() > 0:
-            user = sessionProfile[0]
-            room = user.room
+#         if sessionProfile.count() > 0:
+#             user = sessionProfile[0]
+#             room = user.room
 
-            if room:
-                user.room = None
-                user.save()
+#             if room:
+#                 user.room = None
+#                 user.save()
             
-                return Response({"message": "Room has been left successfully!"}, status=status.HTTP_200_OK)
+#                 return Response({"message": "Room has been left successfully!"}, status=status.HTTP_200_OK)
 
-            return Response({"room_not_found": "No room with the associated session found"}, status=status.HTTP_404_NOT_FOUND)
+#             return Response({"room_not_found": "No room with the associated session found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class RoomView(generics.ListAPIView):
