@@ -18,6 +18,7 @@ import FastForwardRoundedIcon from '@mui/icons-material/FastForwardRounded';
 import FastRewindRoundedIcon from '@mui/icons-material/FastRewindRounded';
 import { HelperText } from "./customComponents/HelperText";
 import { CustomIconButton } from "./customComponents/CustomIconButton";
+import { CustomProgressBar } from "./customComponents/CustomProgressBar";
 
 export const  MusicPlayer = (props) => {
   const songProgress = (props.time / props.duration) * 100;
@@ -61,56 +62,33 @@ export const  MusicPlayer = (props) => {
   return (
     <Grid item container rowSpacing={3} columnSpacing={0}>
       <Grid item container justifyContent="center" alignItems="center" xs={12}>
-         <img style={{borderRadius: "20%"}} src={props.image_url} width="20%"/>
+         <img style={{borderRadius: "20%"}} src={props.image_url} width={props.isSmallScreen ? "30%" : "20%"}/>
       </Grid>
       <Grid item container justifyContent="center" xs={12}>
          <SecondMainText sx={{fontSize: props.isSmallScreen ? 20 : 30, textAlign: "center"}}>{props.title} ({props.artist})</SecondMainText>
       </Grid>
+      <Grid item xs={12} align="center">
+        <CustomProgressBar sx={{backgroundColor: "#FFFFFF"}} variant="determinate" value={songProgress} />
+      </Grid>
       <Grid item container justifyContent="center" alignItems="center" xs={12}>
-        <SecondMainText sx={{fontSize: props.isSmallScreen ? 30 : 40}}>{props.votes_to_rewind}/{props.votes_required_to_rewind}</SecondMainText>
+        <SecondMainText sx={{fontSize: props.isSmallScreen ? 20 : 40}}>{props.votes_to_rewind}/{props.votes_required_to_rewind}</SecondMainText>
 
-       <div style={{paddingLeft: "20px", paddingRight: "15px"}}> 
+       <div style={{paddingLeft: props.isSmallScreen ? "10px" : "20px", paddingRight:  props.isSmallScreen ? "8px" : "15px"}}> 
           <CustomIconButton onClick={rewindSong} disableRipple>
-            <FastRewindRoundedIcon sx={{fontSize: props.isSmallScreen ? "40px" : "60px"}}/>
+            <FastRewindRoundedIcon sx={{fontSize: props.isSmallScreen ? "50px" : "60px"}}/>
           </CustomIconButton>
 
           <CustomIconButton onClick={props.is_playing ? pauseSong : playSong} disableRipple>
-            {props.is_playing ? <PauseCircleRoundedIcon sx={{fontSize: props.isSmallScreen ? "40px" : "60px"}}/> : <PlayCircleFilledRoundedIcon sx={{fontSize: props.isSmallScreen ? "40px" : "60px"}}/>}
+            {props.is_playing ? <PauseCircleRoundedIcon sx={{fontSize: props.isSmallScreen ? "50px" : "60px"}}/> : <PlayCircleFilledRoundedIcon sx={{fontSize: props.isSmallScreen ? "50px" : "60px"}}/>}
           </CustomIconButton>
 
           <CustomIconButton onClick={skipSong} disableRipple>
-            <FastForwardRoundedIcon sx={{fontSize: props.isSmallScreen ? "40px" : "60px"}}/> 
+            <FastForwardRoundedIcon sx={{fontSize: props.isSmallScreen ? "50px" : "60px"}}/> 
           </CustomIconButton>
         </div>
 
-        <SecondMainText sx={{fontSize: props.isSmallScreen ? 30 : 40}}>{props.votes_to_skip}/{props.votes_required_to_skip}</SecondMainText>
+        <SecondMainText sx={{fontSize: props.isSmallScreen ? 20 : 40}}>{props.votes_to_skip}/{props.votes_required_to_skip}</SecondMainText>
       </Grid>
     </Grid>
-
-      // <Grid container alignItems="center">
-      //   <Grid item align="center" xs={4}>
-      //     <img src={props.image_url} height="100%" width="100%" />
-      //   </Grid>
-      //   <Grid item align="center" xs={8}>
-      //     <Typography component="h5" variant="h5">
-      //       {props.title}
-      //     </Typography>
-      //     <Typography color="textSecondary" variant="subtitle1">
-      //       {props.artist}
-      //     </Typography>
-      //     <div>
-      //       <IconButton onClick={rewindSong}>
-      //         <SkipPreviousIcon/> {props.votes_to_rewind} / {props.votes_required_to_rewind}
-      //       </IconButton>
-      //       <IconButton onClick={props.is_playing ? pauseSong : playSong}>
-      //         {props.is_playing ? <PauseIcon /> : <PlayArrowIcon />}
-      //       </IconButton>
-      //       <IconButton onClick={skipSong}>
-      //         <SkipNextIcon /> {props.votes_to_skip} / {props.votes_required_to_skip}
-      //       </IconButton>
-      //     </div>
-      //   </Grid>
-      // </Grid>
-      // <LinearProgress variant="determinate" value={songProgress} />
   );
 };

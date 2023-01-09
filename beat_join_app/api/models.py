@@ -37,4 +37,4 @@ class SessionProfile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Room: {self.room}'
+        return f'{self.session_key}'

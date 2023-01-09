@@ -9,6 +9,24 @@ from .models import Room, SessionProfile
 from .serializers import RoomSerializer, CreateRoomSerializer, UpdateRoomSerializer
 from .utils import *
 
+
+class DeleteFromUsersList(APIView):
+    def post(self, request):
+        sessionProfile = SessionProfile.objects.filter(session_key=self.request.session.session_key)
+
+        if sessionProfile.count() > 0:
+            user = sessionProfile[0]
+            room = user.room
+
+            if room:
+                user.room = None
+                user.save()
+            
+                return Response({"message": "Room has been left successfully!"}, status=status.HTTP_200_OK)
+
+            return Response({"room_not_found": "No room with the associated session found"}, status=status.HTTP_404_NOT_FOUND)
+
+
 class RoomView(generics.ListAPIView):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
@@ -48,13 +66,43 @@ class UserInRoom(APIView):
             room = profile.room
 
             if room:
-                code = room.code
+                user_in_room = check_if_user_in_room(room, profile.session_key)
+                room_active = check_is_active_room(room)
+
+                if user_in_room and room_active:
+                    code = room.code
 
         data = {
             'code': code
         }
 
         return JsonResponse(data, status=status.HTTP_200_OK)
+
+
+class CurrentRoomView(APIView):
+    def get(self, request, format=None):
+        sessionProfile = SessionProfile.objects.filter(session_key=self.request.session.session_key)
+        
+        if sessionProfile.count() > 0:
+            profile = sessionProfile[0]
+            
+            room = profile.room
+
+            if not room:
+                return Response({"host_left_the_room": True}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = RoomSerializer(room, many=False)
+            room_active = check_is_active_room(room)
+
+            current_room = {
+                'current_users': serializer.data.get('current_users'),
+                'is_room_active': room_active
+            }
+
+            return Response(data=current_room, status=status.HTTP_200_OK)
+        
+        return Response({"msg": "User not registered"}, status=status.HTTP_404_NOT_FOUND)
+
 
 class JoinRoom(APIView):
     lookup_url_kwarg = 'code'

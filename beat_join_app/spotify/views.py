@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect
 from rest_framework.response import Response
 from rest_framework.views import APIView 
 from rest_framework import status
+from django.db.utils import IntegrityError
 
 from requests import Request, post
 from .credentials import REDIRECT_URI, CLIENT_ID, CLIENT_SECRET
 from .utils import *
 from api.models import Room, SessionProfile
-from .models import Vote
+from .models import SkipVote, RewindVote
 from api.utils import check_if_user_in_room, get_room_by_session
 
 
@@ -75,7 +76,7 @@ class CurrentSong(APIView):
             response = execute_spotify_api_request(host, endpoint)
 
             if 'error' in response or 'item' not in response:
-                return Response({},  status=status.HTTP_204_NO_CONTENT)
+                return Response({"msg": "No song currently playing."},  status=status.HTTP_204_NO_CONTENT)
             
             item = response.get('item')
             duration = item.get('duration_ms')
@@ -92,8 +93,8 @@ class CurrentSong(APIView):
                 name = artist.get('name')
                 artist_string += name
 
-            votes_to_skip = Vote.objects.filter(room=room, song_id=song_id, is_skip_vote=True)
-            votes_to_rewind = Vote.objects.filter(room=room, song_id=song_id, is_skip_vote=False)
+            votes_to_skip = SkipVote.objects.filter(room=room, song_id=song_id)
+            votes_to_rewind = RewindVote.objects.filter(room=room, song_id=song_id)
 
             song = {
                 'title': item.get('name'),
@@ -112,6 +113,8 @@ class CurrentSong(APIView):
             self.update_room_song(room, song_id)
 
             return Response(song, status=status.HTTP_200_OK)
+
+        return Response({"msg": "No active session found"}, status=status.HTTP_404_NOT_FOUND)
     
     def update_room_song(self, room, song_id):
         current_song = room.current_song
@@ -119,9 +122,10 @@ class CurrentSong(APIView):
         if current_song != song_id:
             room.current_song = song_id
             room.save(update_fields=['current_song'])
-            votes = room.vote_set.all()
-            votes.delete()
-
+            skip_votes = room.skip_votes.all()
+            rewind_votes = room.rewind_votes.all()
+            skip_votes.delete()
+            rewind_votes.delete()
 
 
 class PauseSong(APIView):
@@ -155,31 +159,42 @@ class SkipSong(APIView):
         session_key = self.request.session.session_key
         room = get_room_by_session(session_key)
 
-        votes_to_skip = Vote.objects.filter(room=room, song_id=room.current_song, is_skip_vote=True)
+        votes_to_skip = SkipVote.objects.filter(room=room, song_id=room.current_song)
         votes_needed = room.votes_to_skip
 
-        if (self.request.session.session_key == room.host) or (votes_to_skip.count() + 1 >= votes_needed):
+        user_voted_already = SkipVote.objects.filter(user=session_key).count() > 0
+
+        if ((session_key == room.host) or (votes_to_skip.count() + 1 >= votes_needed)) and not user_voted_already:
             votes_to_skip.delete()
             skip_song(room.host)
         else:
-            vote = Vote(user=self.request.session.session_key, room=room, song_id=room.current_song, is_skip_vote=True)
-            vote.save()
+            try:
+                vote = SkipVote(user=session_key, room=room, song_id=room.current_song)
+                vote.save()
+            except IntegrityError:
+                return Response({"user_voted_already": user_voted_already}, status=status.HTTP_200_OK)
         
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"user_voted_already": user_voted_already}, status=status.HTTP_200_OK)
+
 
 class RewindSong(APIView):
     def post(self, request, format=None):
         session_key = self.request.session.session_key
         room = get_room_by_session(session_key)
 
-        votes_to_rewind = Vote.objects.filter(room=room, song_id=room.current_song, is_skip_vote=False)
+        votes_to_rewind = RewindVote.objects.filter(room=room, song_id=room.current_song)
         votes_needed = room.votes_to_rewind
 
-        if (session_key == room.host) or (votes_to_rewind.count() + 1 >= votes_needed):
+        user_voted_already = RewindVote.objects.filter(user=session_key).count() > 0
+
+        if ((session_key == room.host) or (votes_to_rewind.count() + 1 >= votes_needed)) and not user_voted_already:
             votes_to_rewind.delete()
-            rewind_song(room.host)
+            skip_song(room.host)
         else:
-            vote = Vote(user=session_key, room=room, song_id=room.current_song, is_skip_vote=False)
-            vote.save()
+            try:
+                vote = RewindVote(user=session_key, room=room, song_id=room.current_song)
+                vote.save()
+            except IntegrityError:
+                return Response({"user_voted_already": user_voted_already}, status=status.HTTP_200_OK)
         
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"user_voted_already": user_voted_already}, status=status.HTTP_200_OK)

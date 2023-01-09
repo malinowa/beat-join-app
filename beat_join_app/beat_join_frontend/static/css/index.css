@@ -35,7 +35,7 @@ body {
 
 .homePage {
     width: 50%;
-    height: 80%;
+    height: 50%;
 }
 
 .joinPage {
@@ -45,5 +45,5 @@ body {
 
 .roomPage {
     width: 85%;
-    height: 85%;
+    height: 75%;
 }

@@ -1,5 +1,5 @@
 from .models import SessionProfile, Room
-from django.contrib.sessions.models import Session
+from django.contrib.sessions.models import Session 
 from django.utils import timezone 
 
 def upadate_session_profile(session_key, room, username):
@@ -16,18 +16,38 @@ def upadate_session_profile(session_key, room, username):
 
 
 def check_is_active_room(room: Room):
-    host_session = Session.objects.get(session_key=room.host)
+    #print("HOST:         ", room.host)
 
-    if host_session.expire_date < timezone.now():
-        sessionProfile = SessionProfile.objects.filter(session_key=host_session.session_key)
+    sessionProfile = SessionProfile.objects.filter(session_key=room.host)
+
+    if sessionProfile.count() > 0: 
+        profile = sessionProfile[0]
+        host_session = Session.objects.filter(session_key=profile.session_key)
+
+        if host_session.count() > 0:
+            host = host_session[0]
+            
+            if host.expire_date > timezone.now():
+                return True
         
-        if sessionProfile.count() > 0: 
-            sessionProfile.delete()
-        
+        sessionProfile.delete()
         room.delete()
-        return False
+        
+    return False
 
-    return True
+
+    # host_session = Session.objects.get(session_key=room.host)
+
+    # if host_session.expire_date < timezone.now():
+    #     sessionProfile = SessionProfile.objects.filter(session_key=host_session.session_key)
+        
+    #     if sessionProfile.count() > 0: 
+    #         sessionProfile.delete()
+        
+    #     room.delete()
+    #     return False
+
+    # return True
 
 
 def create_session_if_not_exists(request):
