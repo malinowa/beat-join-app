@@ -60,7 +60,7 @@ export const JoinRoomPage = (props) => {
   return <div className="joinPage">
     <Grid container rowSpacing={3} columnSpacing={1}>
           <Grid item xs={12} align="center">
-            <MainText>Join Room With Code</MainText>
+            <MainText sx={{fontSize: isSmallScreen ? 35 : 50}}>Join Room With Code</MainText>
           </Grid>
 
          <Grid item container xs={12} align="center" rowSpacing={3} columnSpacing={5}>
@@ -110,10 +110,10 @@ export const JoinRoomPage = (props) => {
          </Grid>
 
           <Grid item xs={12} align="center">
-            <RegularPageButton variant="contained" color="primary" onClick={joinRoom}>Join Room</RegularPageButton>
+            <RegularPageButton sx={{fontSize: isSmallScreen ? 16 : 24}} variant="contained" color="primary" onClick={joinRoom}>Join Room</RegularPageButton>
           </Grid>
           <Grid item xs={12} align="center">
-            <RegularPageButton variant="contained" color="secondary" to="/" component={Link}>Back</RegularPageButton>
+            <RegularPageButton sx={{fontSize: isSmallScreen ? 16 : 24}} variant="contained" color="secondary" to="/" component={Link}>Back</RegularPageButton>
           </Grid>
         </Grid>
   </div>;

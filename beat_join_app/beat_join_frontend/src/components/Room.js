@@ -99,11 +99,7 @@ export const Room = (props) => {
   const getCurrentRoom = () => {
     fetch('/api/current-room')
     .then((response) => {
-      if (!response.ok) {
-        navigate("/");
-      } else {  
-        return response.json();
-      }
+      return response.json();
     })
     .then((data) => {
       setCurrentUsers(data.current_users)
@@ -207,18 +203,6 @@ export const Room = (props) => {
     )
   }
 
-  const users = []
-
-  for (let i = 0; i < 50; i++) {
-    users.push({
-      id: i,
-      session_key: "oo1gsrw0v8q39olq7300qvst42grwhod",
-      username: "qweqweqwe",
-      created:"2023-01-08T15:53:25.197728Z",
-      room: 135
-    })
-  }
-
   return (
     <div className="roomPage">
     {!isSmallScreen 
@@ -267,10 +251,14 @@ export const Room = (props) => {
               }
           </Grid>
           <Grid item container spacing={3} alignItems="center">
-            {roomData.isHost && 
+            {roomData.isHost ? 
             <Grid item xs={12} align="center">
               <RegularPageButton sx={{height: "70px"}} onClick={() => updateShowSettings(true)}>Settings</RegularPageButton>
-            </Grid>}
+            </Grid> 
+              :
+              <Grid item xs={12} align="center">
+                <HelperText><span style={{textDecoration: "underline"}}>Note:</span> You {roomData.guestCanPause ? "can" : "cannot"} play/pause data in this room.</HelperText>
+              </Grid>}
             <Grid item xs={12} align="center">
               <RegularPageButton sx={{height: "70px"}} onClick={leaveRoomPressed}>Leave Room</RegularPageButton>
             </Grid>

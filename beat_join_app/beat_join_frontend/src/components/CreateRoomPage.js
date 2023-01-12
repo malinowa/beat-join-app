@@ -106,6 +106,7 @@ export const CreateRoomPage = ({update = false, guestCanPause = true, votesToSki
     return (<>
             <Grid item xs={12} align="center">
               <RegularPageButton
+                sx={{fontSize: isSmallScreen ? 16 : 24}}
                 color="primary"
                 onClick={handleCreateNewRoomButtonPressed}
                 variant="contained"
@@ -114,7 +115,7 @@ export const CreateRoomPage = ({update = false, guestCanPause = true, votesToSki
               </RegularPageButton>
             </Grid>
             <Grid item xs={12} align="center">
-              <RegularPageButton color="secondary" variant="contained" to="/" component={Link}>
+              <RegularPageButton sx={{fontSize: isSmallScreen ? 16 : 24}} color="secondary" variant="contained" to="/" component={Link}>
                 Back
               </RegularPageButton>
             </Grid>
@@ -123,7 +124,7 @@ export const CreateRoomPage = ({update = false, guestCanPause = true, votesToSki
 
   const renderUpdateButtons = () => {
      return (<Grid item xs={12} align="center">
-                <RegularPageButton onClick={handleUpdateRoomButtonPressed}>
+                <RegularPageButton sx={{fontSize: isSmallScreen ? 16 : 24}} onClick={handleUpdateRoomButtonPressed}>
                   Update Room
                 </RegularPageButton>
               </Grid>)
@@ -141,7 +142,7 @@ export const CreateRoomPage = ({update = false, guestCanPause = true, votesToSki
         </Collapse>
       </Grid>
       <Grid item xs={12} align="center">
-        <MainText>{title}</MainText>
+        <MainText sx={{fontSize: isSmallScreen ? 35 : 50}}>{title}</MainText>
       </Grid>
       <Grid item container xs={12} align="center" rowSpacing={3} columnSpacing={5}>
         <Grid container item xs={12} md={6}>
@@ -164,7 +165,7 @@ export const CreateRoomPage = ({update = false, guestCanPause = true, votesToSki
                     color: "#8E26DF",
                   },
                 }}/>}
-                label="Play/Pause"
+                label="Play/Stop"
                 labelPlacement="bottom"
                 sx={{
                   mx: 1,
