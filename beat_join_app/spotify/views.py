@@ -189,7 +189,7 @@ class RewindSong(APIView):
 
         if ((session_key == room.host) or (votes_to_rewind.count() + 1 >= votes_needed)) and not user_voted_already:
             votes_to_rewind.delete()
-            skip_song(room.host)
+            rewind_song(room.host)
         else:
             try:
                 vote = RewindVote(user=session_key, room=room, song_id=room.current_song)

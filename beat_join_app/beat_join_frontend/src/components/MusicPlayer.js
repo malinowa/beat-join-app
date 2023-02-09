@@ -67,9 +67,6 @@ export const  MusicPlayer = (props) => {
       <Grid item container justifyContent="center" xs={12}>
          <SecondMainText sx={{fontSize: props.isSmallScreen ? 20 : 30, textAlign: "center"}}>{props.title} ({props.artist})</SecondMainText>
       </Grid>
-      <Grid item container justifyContent="center" xs={12}>
-        <HelperText><span style={{textDecoration: "underline"}}>Coming next:</span> {props.nextSongTitle} ({props.nextSongArtist})</HelperText>
-      </Grid>
       <Grid item xs={12} align="center">
         <CustomProgressBar sx={{backgroundColor: "#FFFFFF"}} variant="determinate" value={songProgress} />
       </Grid>

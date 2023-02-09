@@ -31,6 +31,7 @@ class RoomView(generics.ListAPIView):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
 
+
 class LeaveRoom(APIView):
     def post(self, request, format=None):
         create_session_if_not_exists(self.request)
@@ -210,6 +211,8 @@ class UpdateRoomView(APIView):
             create_session_if_not_exists(self.request)
 
             serializer = self.serializer_class(data=request.data)
+
+            return Response({"msg": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
 
             if serializer.is_valid():
                 guest_can_pause = serializer.data.get('guest_can_pause')

@@ -52,7 +52,7 @@ export const Room = (props) => {
           .then((data) => {
             window.location.replace(data.url);
           })
-        }, 2000);
+        }, 3000);
         
       }
     })
